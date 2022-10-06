@@ -5,16 +5,17 @@
 #define WR 1
 #define MAXNUM 35
 
-void neighbor(int *p);
+void next(int *);
 
 int main(int argc,char *argv[])
 {
     int p[2];
     pipe(p);
 
+    
     if(fork() == 0)
     {
-        neighbor(p);
+        next(p);
     }
     else
     {
@@ -23,10 +24,40 @@ int main(int argc,char *argv[])
         {
             write(p[WR],&i,sizeof(int));
         }
+        close(p[WR]);
+        wait((int *) 0);
+
     }
+    exit(0);
 }
 
-void neighbor(int *p)
+void next(int *p)
 {
+    int np[2];
+    int n ;
+    close(p[WR]);
+    int read_status = read(p[RD],&n,sizeof(int));
+
+    if(read_status == 0)
+        exit(0);
+
+    pipe(np);
+    if(fork() == 0)
+        next(np);
+    else
+    {
+        close(np[RD]);
+        int prime = n;
+        printf("prime %d\n", n);
+        while(read(p[RD],&n,sizeof(int)) != 0)
+            if(n % prime != 0)
+                write(np[WR],&n,sizeof(int));
+        close(np[WR]);
+
+        wait((int *) 0);
+
+        exit(0);
+
+    }
 
 }
