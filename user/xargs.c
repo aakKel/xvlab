@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
         int cursor = 0;
         int flag = 0;
         int read_res ;
+        //from pipe or .. read data to bf and write in param one bite to ..
         while((read_res = read(0,&bf,1)) > 0 && bf != '\n')
         {
             if(bf == ' ' && flag == 1)

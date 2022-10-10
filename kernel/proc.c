@@ -290,7 +290,9 @@ fork(void)
   np->cwd = idup(p->cwd);
 
   safestrcpy(np->name, p->name, sizeof(p->name));
-
+    //
+    np->syscallnum = p->syscallnum;
+    //
   pid = np->pid;
 
   np->state = RUNNABLE;
